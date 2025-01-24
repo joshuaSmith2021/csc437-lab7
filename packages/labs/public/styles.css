@@ -1,0 +1,66 @@
+/**
+ * Capture non-standard colors used (i.e. not #fff, #000, etc.)
+ */
+:root {
+    --color-main: hsl(172 30% 25%);
+    --color-secondary: hsl(192 30% 25%);
+    --color-link-light: hsl(240 100% 90%);
+    --color-link: var(--color-link-light);
+    --color-info: hsl(152 30% 25%);
+    --color-header: hsl(132 30% 25%);
+    --color-accent: hsl(109 30% 25%);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--color-main);
+    color: #ffffff;
+    font-family: Roboto, sans-serif;
+}
+
+a {
+    color: var(--color-link);
+}
+
+header {
+    padding: 1rem;
+    background-color: var(--color-header);
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+}
+
+header a {
+    margin: 0 1rem;
+}
+
+main {
+    background-color: var(--color-secondary);
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+}
+
+main > * > * {
+    margin: 1rem;
+}
+
+.accent {
+    background-color: var(--color-accent);
+}
+
+.info {
+    background-color: var(--color-info);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: Amarante;
+}
+
+dl {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
