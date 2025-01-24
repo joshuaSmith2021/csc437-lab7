@@ -9,6 +9,7 @@
     --color-info: hsl(152 30% 25%);
     --color-header: hsl(132 30% 25%);
     --color-accent: hsl(109 30% 25%);
+    --ideal-cell-width: 500px;
 }
 
 * {
@@ -40,8 +41,17 @@ header a {
 
 main {
     background-color: var(--color-secondary);
-    display: grid;
-    grid-template-columns: 1fr 2fr;
+}
+
+@media screen and (min-width: 700px) {
+    main {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(var(--ideal-cell-width), 1fr));
+    }
+}
+
+main > img {
+    width: clamp(100px, 100%, var(--ideal-cell-width));
 }
 
 main > * > * {
