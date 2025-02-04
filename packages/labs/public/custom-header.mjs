@@ -1,6 +1,15 @@
+/**
+ * This has been a nice exercise in learning to appreciate all that react does
+ * and all that TypeScript does.
+ */
+
 import { attachShadow } from './utils.mjs';
 
 const CUSTOM_ELEMENT_TAG = 'custom-header'
+const THEME_LOCAL_STORAGE_TAG = 'themeing'
+const LIGHT_THEME = 'light'
+const DARK_THEME = 'dark'
+const LIGHT_THEME_CLASS_NAME = 'light-theme'
 
 const buildHeader = (pathname) => {
   const isSubpage = pathname === '/subpage.html'
@@ -95,7 +104,7 @@ button {
         <button>Menu</button>
         <label>
             <input type="checkbox" autocomplete="off" />
-            Dark mode
+            Light mode
         </label>
       </div>
     </header>
@@ -109,14 +118,43 @@ class CustomHeader extends HTMLElement {
   connectedCallback() {
     const shadow = attachShadow(this, TEMPLATE)
     const nav = shadow.querySelector('nav')
-    const toggle = shadow.querySelector('button')
-    toggle.addEventListener('click', () => {
-      nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex' 
+    const menuToggle = shadow.querySelector('button')
+    const themeToggle = shadow.querySelector('input')
+
+    /**
+     * I don't love using react-hook-esque naming here, but this name is what
+     * I'm most used to, so it's what I'm rolling with. It just returns true if
+     * the light-theme box is checked, false otherwise.
+     */
+    const isLightThemeChecked = () =>
+      localStorage.getItem(THEME_LOCAL_STORAGE_TAG) === LIGHT_THEME
+
+    if (isLightThemeChecked()) {
+      document.body.classList.add(LIGHT_THEME_CLASS_NAME)
+    }
+
+    themeToggle.checked = isLightThemeChecked()
+
+    menuToggle.addEventListener('click', () => {
+      (nav.style.display = nav.style.display === 'flex'
+        ? 'none'
+        : 'flex')
     })
 
     document.body.addEventListener('click', (e) => {
       if (!document.querySelector(CUSTOM_ELEMENT_TAG).contains(e.target)) {
         nav.style.display = 'none';
+      }
+    })
+
+    themeToggle.addEventListener('change', (e) => {
+      localStorage.setItem(THEME_LOCAL_STORAGE_TAG,
+        e.target.checked ? LIGHT_THEME : DARK_THEME)
+
+      if (isLightThemeChecked()) {
+        document.body.classList.add(LIGHT_THEME_CLASS_NAME)
+      } else {
+        document.body.classList.remove(LIGHT_THEME_CLASS_NAME)
       }
     })
   }
