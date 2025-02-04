@@ -10,6 +10,7 @@
     --color-header: hsl(132 30% 25%);
     --color-accent: hsl(109 30% 25%);
     --ideal-cell-width: 500px;
+    --default-gap: 1rem;
 }
 
 * {

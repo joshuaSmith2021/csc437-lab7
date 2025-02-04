@@ -22,7 +22,7 @@ header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    gap: 1rem;
+    gap: var(--default-gap);
     align-items: baseline;
 }
 
@@ -45,6 +45,13 @@ button {
     font-size: 1.25rem;
 }
 
+.flex-rows {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: var(--default-gap);
+}
+
 @media (min-width: 700px) {
     button {
       display: none;
@@ -57,13 +64,13 @@ button {
     header > div {
       display: flex;
       flex-direction: row;
-      gap: 1em;
+      gap: var(--default-gap);
       align-items: stretch;
     }
 
     header nav {
       flex-direction: row;
-      gap: 1rem;
+      gap: var(--default-gap);
       align-items: flex-end;
     }
 }
@@ -84,7 +91,13 @@ button {
           </div>
         </nav>
       </div>
-      <button>Menu</button>
+      <div class="flex-rows">
+        <button>Menu</button>
+        <label>
+            <input type="checkbox" autocomplete="off" />
+            Dark mode
+        </label>
+      </div>
     </header>
   `)
 }
