@@ -11,7 +11,6 @@ type ModalProps = {
 };
 
 function Modal({ headerLabel, children, visible, onClose }: ModalProps) {
-  const containerDiv = useRef<HTMLDivElement>(null);
   const childDiv = useRef<HTMLDivElement>(null);
 
   return (
@@ -32,16 +31,20 @@ function Modal({ headerLabel, children, visible, onClose }: ModalProps) {
           onClose();
         }
       }}
-      ref={containerDiv}
     >
       <div
         className="bg-white p-5 flex flex-col gap-3 rounded-sm"
         ref={childDiv}
       >
         <div className="flex justify-between">
-          {(headerLabel && <h1>{headerLabel}</h1>) || <div></div>}
+          {(headerLabel && <h1 className="text-xl">{headerLabel}</h1>) || (
+            <div></div>
+          )}
           <button onClick={onClose}>
-            <FontAwesomeIcon className="text-stone-600" icon={faTimes} />
+            <FontAwesomeIcon
+              className="text-stone-600 text-xl"
+              icon={faTimes}
+            />
           </button>
         </div>
         {children}
