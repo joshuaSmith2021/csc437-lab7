@@ -1,7 +1,15 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import {
+  faSpinner,
+  faTimes,
+  faTrashCan,
+} from "@fortawesome/free-solid-svg-icons";
+import { Spinner } from "./Spinner";
+
+const MDN_URL =
+  "https://mdn.github.io/learning-area/javascript/apis/fetching-data/can-store/products.json";
 
 type ModalProps = {
   headerLabel?: React.ReactNode;
@@ -102,6 +110,95 @@ function AddTaskForm({ taskText, setTaskText, onSubmit }: AddTaskFormProps) {
   );
 }
 
+const floatToMoneyString = (n: number) =>
+  `$${(Math.round(n * 100) / 100).toFixed(2)}`;
+
+type GroceriesWidgetProps = {
+  addItemToList: (item: string) => void;
+};
+
+function GroceriesWidget({ addItemToList }: GroceriesWidgetProps) {
+  const [datasourceUrl, setDatasourceUrl] = useState<string | undefined>(
+    undefined,
+  );
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<unknown>(undefined);
+  const [groceries, setGroceries] = useState<
+    { name: string; price: number; image: string; type: string }[] | undefined
+  >(undefined);
+
+  useEffect(() => {
+    if (datasourceUrl) {
+      setIsLoading(true);
+      setGroceries(undefined);
+      setError(undefined);
+      const timeout = setTimeout(
+        () =>
+          datasourceUrl &&
+          fetch(datasourceUrl)
+            .then((response) => response.json())
+            .then((data) => {
+              setIsLoading(false);
+              setGroceries(data);
+            })
+            .catch((e) => {
+              setIsLoading(false);
+              setError(e);
+            }),
+        2000,
+      );
+
+      return () => clearTimeout(timeout);
+    } else {
+      setGroceries(undefined);
+      setIsLoading(false);
+      setError(undefined);
+    }
+  }, [datasourceUrl]);
+
+  return (
+    <>
+      <div className="flex gap-3">
+        <h1 className="text-xl font-bold">Grocery Prices Today</h1>
+        <select
+          onChange={(e) => setDatasourceUrl(e.currentTarget.value)}
+          disabled={isLoading}
+          className="disabled:text-gray-400"
+        >
+          <option value="">Select a data source</option>
+          <option value="https://mdn.github.io/learning-area/javascript/apis/fetching-data/can-store/products.json">
+            MDN
+          </option>
+          <option value="https://joshthings.com/badurl.json">Who knows?</option>
+        </select>
+      </div>
+      {(isLoading && !error && <Spinner />) ||
+        (groceries && (
+          <div className="grid grid-cols-[2fr_1fr_1fr] w-lg gap-1 items-center">
+            <b>Name</b>
+            <b>Price</b>
+            <div></div>
+            {groceries?.flatMap(({ name, price }, i) => [
+              <div key={3 * i}>{name}</div>,
+              <div key={3 * i + 1}>{floatToMoneyString(price)}</div>,
+              <button
+                key={3 * i + 2}
+                className="text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-xs p-3"
+                onClick={() =>
+                  addItemToList(`Buy ${name} (${floatToMoneyString(price)})`)
+                }
+              >
+                Add to todos
+              </button>,
+            ])}
+          </div>
+        )) ||
+        (error && <span className="text-red-700">{String(error)}</span>) ||
+        "Please select a data source to view grocery prices."}
+    </>
+  );
+}
+
 function App() {
   const [tasks, setTasks] = useState(["Eat", "Sleep", "Repeat"]);
   const [newTaskText, setNewTaskText] = useState("");
@@ -114,6 +211,14 @@ function App() {
 
     setNewTaskText("");
     setTasks([...tasks, newTaskText]);
+  };
+
+  const addTaskByName = (taskName: string) => {
+    if (taskName === "") {
+      return;
+    }
+
+    setTasks([...tasks, taskName]);
   };
 
   return (
@@ -138,7 +243,7 @@ function App() {
       >
         New Task
       </button>
-      <section>
+      <section className="mb-4">
         <h1 className="text-xl font-bold">To do</h1>
         <ul className="flex flex-col">
           {tasks.map((task, i) => (
@@ -151,6 +256,9 @@ function App() {
             />
           ))}
         </ul>
+      </section>
+      <section>
+        <GroceriesWidget addItemToList={addTaskByName} />
       </section>
     </main>
   );
