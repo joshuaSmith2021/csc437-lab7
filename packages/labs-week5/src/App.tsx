@@ -2,14 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faSpinner,
   faTimes,
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
 import { Spinner } from "./Spinner";
-
-const MDN_URL =
-  "https://mdn.github.io/learning-area/javascript/apis/fetching-data/can-store/products.json";
 
 type ModalProps = {
   headerLabel?: React.ReactNode;
