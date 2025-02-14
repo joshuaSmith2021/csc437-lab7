@@ -1,12 +1,24 @@
 import { useState } from "react";
 import Navbar from "./Navbar";
+import { sendLoginRequest } from "../fetch/auth";
 
 export function LoginScreen() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isSubmissionDisabled, setIsSubmissionDisabled] = useState(false);
 
   const handleLogin = () => {
-    console.log(username, password);
+    setIsSubmissionDisabled(true);
+    setError("");
+    sendLoginRequest(username, password)
+      .then(({ username, token, expiresOn }) => {
+        localStorage.setItem("username", username);
+        localStorage.setItem("token", token);
+        localStorage.setItem("expiresOn", expiresOn.toString(10));
+      })
+      .catch((e) => setError(String(e)))
+      .finally(() => setIsSubmissionDisabled(false));
   };
 
   return (
@@ -36,7 +48,17 @@ export function LoginScreen() {
           </label>
 
           <button
-            className="bg-slate-700 hover:bg-slate-800 active:bg-slate-900 text-white rounded-md p-1"
+            className={[
+              "bg-slate-700",
+              "hover:bg-slate-800",
+              "active:bg-slate-900",
+              "disabled:bg-slate-400",
+              "disabled:cursor-not-allowed",
+              "text-white",
+              "rounded-md",
+              "p-1",
+            ].join(" ")}
+            disabled={isSubmissionDisabled}
             onClick={(e) => {
               e.preventDefault();
               handleLogin();
@@ -45,6 +67,7 @@ export function LoginScreen() {
             Log in
           </button>
         </form>
+        <p className="text-red-700">{error}</p>
       </div>
       <div>{/* Spacer */}</div>
     </div>

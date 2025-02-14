@@ -13,7 +13,7 @@ function NotFound() {
       </div>
       <div>{/* Spacer */}</div>
     </div>
-  )
+  );
 }
 
 export default function AppRoutes() {

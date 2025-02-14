@@ -57,8 +57,8 @@ function PostCard({ post }: PostCardProps) {
 function PostGrid({ posts }: { posts: Post[] }) {
   return (
     <div className="grid grid-cols-[repeat(auto-fit,minmax(400px,1fr))] gap-10 p-10">
-      {posts.map((post) => (
-        <PostCard post={post} />
+      {posts.map((post, i) => (
+        <PostCard post={post} key={i} />
       ))}
     </div>
   );
