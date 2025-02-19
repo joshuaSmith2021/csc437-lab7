@@ -1,19 +1,18 @@
 import { useParams } from "react-router";
 import { useImageFetching } from "./useImageFetching.js";
 
-export function ImageDetails() {
+export function ImageDetails({ isLoading, fetchedImages }) {
   const { imageId } = useParams();
 
-  const { isLoading, fetchedImages } = useImageFetching(imageId, 0);
   if (isLoading) {
-    return <MainLayout>Loading...</MainLayout>;
+    return <>Loading...</>;
   }
-  const imageData = fetchedImages[0];
+  const imageData = fetchedImages[imageId];
   if (!imageData) {
     return (
-      <MainLayout>
+      <>
         <h2>Image not found</h2>
-      </MainLayout>
+      </>
     );
   }
 
