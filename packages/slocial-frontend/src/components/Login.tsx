@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Navbar from "./Navbar";
-import { sendLoginRequest } from "../fetch/auth";
+import { attemptLogin } from "../fetch/auth";
 
 export function LoginScreen() {
   const [username, setUsername] = useState("");
@@ -11,12 +11,7 @@ export function LoginScreen() {
   const handleLogin = () => {
     setIsSubmissionDisabled(true);
     setError("");
-    sendLoginRequest(username, password)
-      .then(({ username, token, expiresOn }) => {
-        localStorage.setItem("username", username);
-        localStorage.setItem("token", token);
-        localStorage.setItem("expiresOn", expiresOn.toString(10));
-      })
+    attemptLogin(username, password)
       .catch((e) => setError(String(e)))
       .finally(() => setIsSubmissionDisabled(false));
   };

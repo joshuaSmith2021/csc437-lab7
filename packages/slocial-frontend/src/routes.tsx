@@ -1,7 +1,20 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import App from "./App";
 import { LoginScreen } from "./components/Login";
 import Navbar from "./components/Navbar";
+import { doLogout } from "./fetch/auth";
+import { useEffect } from "react";
+
+function Logout() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    doLogout();
+    navigate('/')
+  }, [])
+
+  return <></>
+}
 
 function NotFound() {
   return (
@@ -21,6 +34,7 @@ export default function AppRoutes() {
     <Routes>
       <Route path="/" element={<App />} />
       <Route path="/login" element={<LoginScreen />} />
+      <Route path="/logout" element={<Logout />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
