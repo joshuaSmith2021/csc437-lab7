@@ -1,8 +1,6 @@
-import { MainLayout } from "./MainLayout.jsx";
-
 export function AccountSettings({ username, setUsername }) {
   return (
-    <MainLayout>
+    <>
       <h2>Account settings</h2>
       <label>
         Username{" "}
@@ -14,6 +12,6 @@ export function AccountSettings({ username, setUsername }) {
       <p>
         <i>Changes are auto-saved.</i>
       </p>
-    </MainLayout>
+    </>
   );
 }

@@ -1,4 +1,3 @@
-import { MainLayout } from "../MainLayout.jsx";
 import { useImageFetching } from "./useImageFetching.js";
 import "./ImageGallery.css";
 import { Link } from "react-router";
@@ -14,10 +13,10 @@ export function ImageGallery() {
     </div>
   ));
   return (
-    <MainLayout>
+    <>
       <h2>Image Gallery</h2>
       {isLoading && "Loading..."}
       <div className="ImageGallery">{imageElements}</div>
-    </MainLayout>
+    </>
   );
 }

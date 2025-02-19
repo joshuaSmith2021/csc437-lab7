@@ -1,5 +1,4 @@
 import { useParams } from "react-router";
-import { MainLayout } from "../MainLayout.jsx";
 import { useImageFetching } from "./useImageFetching.js";
 
 export function ImageDetails() {
@@ -19,13 +18,13 @@ export function ImageDetails() {
   }
 
   return (
-    <MainLayout>
+    <>
       <h2>{imageData.name}</h2>
       <img
         className="ImageDetails-img"
         src={imageData.src}
         alt={imageData.name}
       />
-    </MainLayout>
+    </>
   );
 }
