@@ -1,4 +1,4 @@
-import { use, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faTrashCan } from "@fortawesome/free-solid-svg-icons";
@@ -132,7 +132,7 @@ function GroceriesWidget({ addItemToList }: GroceriesWidgetProps) {
       setIsLoading(true);
       setGroceries(undefined);
       setError(undefined);
-      const timeout = setTimeout(
+      setTimeout(
         () =>
           datasourceUrl &&
           fetch(datasourceUrl)
@@ -147,8 +147,6 @@ function GroceriesWidget({ addItemToList }: GroceriesWidgetProps) {
             }),
         2000,
       );
-
-      return () => clearTimeout(timeout);
     } else {
       setGroceries(undefined);
       setIsLoading(false);
