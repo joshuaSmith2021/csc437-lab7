@@ -1,10 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { use, useEffect, useMemo, useRef, useState } from "react";
 import "./App.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faTimes,
-  faTrashCan,
-} from "@fortawesome/free-solid-svg-icons";
+import { faTimes, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { Spinner } from "./Spinner";
 
 type ModalProps = {
@@ -58,15 +55,22 @@ function Modal({ headerLabel, children, visible, onClose }: ModalProps) {
 }
 
 type TodoItemProps = {
+  checked: boolean;
   label: string;
   onDelete?: () => void;
+  setChecked: (checked: boolean) => void;
 };
 
-function TodoItem({ label, onDelete }: TodoItemProps) {
+function TodoItem({ checked, label, onDelete, setChecked }: TodoItemProps) {
   return (
     <li className="flex flex-row justify-between max-w-3xs">
       <label className="text-stone-950">
-        <input type="checkbox" /> {label}
+        <input
+          type="checkbox"
+          checked={checked}
+          onChange={(e) => setChecked(e.currentTarget.checked)}
+        />{" "}
+        {checked ? <s>{label}</s> : label}
       </label>
       <button onClick={onDelete}>
         <FontAwesomeIcon
@@ -195,10 +199,25 @@ function GroceriesWidget({ addItemToList }: GroceriesWidgetProps) {
   );
 }
 
+type Task = {
+  name: string;
+  done: boolean;
+};
+
 function App() {
-  const [tasks, setTasks] = useState(["Eat", "Sleep", "Repeat"]);
+  const [tasks, setTasks] = useState<Task[]>(
+    ["Eat", "Sleep", "Repeat"].map((text) => ({ name: text, done: false })),
+  );
   const [newTaskText, setNewTaskText] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const addTaskByName = (taskName: string) => {
+    if (taskName === "") {
+      return;
+    }
+
+    setTasks([...tasks, { name: newTaskText, done: false }]);
+  };
 
   const addTask = () => {
     if (newTaskText === "") {
@@ -206,15 +225,7 @@ function App() {
     }
 
     setNewTaskText("");
-    setTasks([...tasks, newTaskText]);
-  };
-
-  const addTaskByName = (taskName: string) => {
-    if (taskName === "") {
-      return;
-    }
-
-    setTasks([...tasks, taskName]);
+    addTaskByName(newTaskText);
   };
 
   return (
@@ -242,12 +253,24 @@ function App() {
       <section className="mb-4">
         <h1 className="text-xl font-bold">To do</h1>
         <ul className="flex flex-col">
-          {tasks.map((task, i) => (
+          {tasks.map(({ name: task, done }, i) => (
             <TodoItem
+              checked={done}
               key={i}
               label={task}
               onDelete={() =>
-                setTasks(tasks.splice(0).filter((query) => query !== task))
+                setTasks(
+                  tasks.splice(0).filter(({ name: query }) => query !== task),
+                )
+              }
+              setChecked={(checked) =>
+                setTasks(
+                  tasks
+                    .splice(0)
+                    .map((prev) =>
+                      prev.name === task ? { name: task, done: checked } : prev,
+                    ),
+                )
               }
             />
           ))}
