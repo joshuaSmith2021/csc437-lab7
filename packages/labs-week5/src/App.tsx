@@ -92,8 +92,6 @@ type AddTaskFormProps = {
 function AddTaskForm({ taskText, setTaskText, onSubmit }: AddTaskFormProps) {
   return (
     <div className="flex gap-3">
-      {" "}
-      {/* Unfortunately comments in JSX have to be done like this */}
       <input
         placeholder="New task name"
         value={taskText}
@@ -214,7 +212,7 @@ function App() {
       return;
     }
 
-    setTasks([...tasks, { name: newTaskText, done: false }]);
+    setTasks([...tasks, { name: taskName, done: false }]);
   };
 
   const addTask = () => {
