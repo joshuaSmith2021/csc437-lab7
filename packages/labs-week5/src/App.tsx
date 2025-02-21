@@ -3,6 +3,7 @@ import "./App.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { Spinner } from "./Spinner";
+import { GroceryData, groceryFetcher } from "./groceryFetcher";
 
 type ModalProps = {
   headerLabel?: React.ReactNode;
@@ -116,56 +117,82 @@ type GroceriesWidgetProps = {
 };
 
 function GroceriesWidget({ addItemToList }: GroceriesWidgetProps) {
-  const [datasourceUrl, setDatasourceUrl] = useState<string | undefined>(
-    undefined,
-  );
+  const [datasource, setDatasource] = useState<string>("MDN");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<unknown>(undefined);
-  const [groceries, setGroceries] = useState<
-    { name: string; price: number; image: string; type: string }[] | undefined
-  >(undefined);
+  const [groceries, setGroceries] = useState<GroceryData | undefined>(
+    undefined,
+  );
+
+  // useEffect(() => {
+  //   if (datasourceUrl) {
+  //     setIsLoading(true);
+  //     setGroceries(undefined);
+  //     setError(undefined);
+  //     setTimeout(
+  //       () =>
+  //         datasourceUrl &&
+  //         fetch(datasourceUrl)
+  //           .then((response) => response.json())
+  //           .then((data) => {
+  //             setIsLoading(false);
+  //             setGroceries(data);
+  //           })
+  //           .catch((e) => {
+  //             setIsLoading(false);
+  //             setError(e);
+  //           }),
+  //       2000,
+  //     );
+  //   } else {
+  //     setGroceries(undefined);
+  //     setIsLoading(false);
+  //     setError(undefined);
+  //   }
+  // }, [datasourceUrl]);
 
   useEffect(() => {
-    if (datasourceUrl) {
-      setIsLoading(true);
-      setGroceries(undefined);
-      setError(undefined);
-      setTimeout(
-        () =>
-          datasourceUrl &&
-          fetch(datasourceUrl)
-            .then((response) => response.json())
-            .then((data) => {
-              setIsLoading(false);
-              setGroceries(data);
-            })
-            .catch((e) => {
-              setIsLoading(false);
-              setError(e);
-            }),
-        2000,
-      );
-    } else {
-      setGroceries(undefined);
-      setIsLoading(false);
-      setError(undefined);
-    }
-  }, [datasourceUrl]);
+    let isStale = false;
+    setIsLoading(true);
+    setError(undefined);
+    setGroceries(undefined);
+    groceryFetcher
+      .fetch(datasource)
+      .then((data) => {
+        if (!isStale) {
+          setGroceries(data);
+        }
+      })
+      .catch((e) => {
+        if (!isStale) {
+          setError(e);
+        }
+      })
+      .finally(() => {
+        if (!isStale) {
+          setIsLoading(false);
+        }
+      });
+
+    return () => {
+      isStale = true;
+    };
+  }, [datasource]);
 
   return (
     <>
       <div className="flex gap-3">
         <h1 className="text-xl font-bold">Grocery Prices Today</h1>
         <select
-          onChange={(e) => setDatasourceUrl(e.currentTarget.value)}
+          onChange={(e) => setDatasource(e.currentTarget.value)}
           disabled={isLoading}
           className="disabled:text-gray-400"
+          value={datasource}
         >
-          <option value="">Select a data source</option>
-          <option value="https://mdn.github.io/learning-area/javascript/apis/fetching-data/can-store/products.json">
-            MDN
-          </option>
-          <option value="https://joshthings.com/badurl.json">Who knows?</option>
+          <option value="MDN">MDN</option>
+          <option value="Liquor store">Liquor store</option>
+          <option value="Butcher">Butcher</option>
+          <option value="whoknows">Who knows?</option>
         </select>
       </div>
       {(isLoading && !error && <Spinner />) ||
