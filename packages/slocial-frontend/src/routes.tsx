@@ -1,19 +1,22 @@
 import { Route, Routes, useNavigate } from "react-router-dom";
 import App from "./App";
-import { LoginScreen } from "./components/Login";
+import LoginScreen from "./components/Login";
 import Navbar from "./components/Navbar";
 import { doLogout } from "./fetch/auth";
 import { useEffect } from "react";
+import CreatePost from "./components/CreatePost";
+import PageLayout from "./components/Layout";
+import SignupScreen from "./components/Signup";
 
 function Logout() {
   const navigate = useNavigate();
 
   useEffect(() => {
     doLogout();
-    navigate('/')
-  }, [])
+    navigate("/");
+  }, []);
 
-  return <></>
+  return <></>;
 }
 
 function NotFound() {
@@ -32,9 +35,20 @@ function NotFound() {
 export default function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<App />} />
-      <Route path="/login" element={<LoginScreen />} />
-      <Route path="/logout" element={<Logout />} />
+      <Route path="/" element={<PageLayout children={<App />} />} />
+      <Route
+        path="/login"
+        element={<PageLayout children={<LoginScreen />} />}
+      />
+      <Route path="/logout" element={<PageLayout children={<Logout />} />} />
+      <Route
+        path="/create"
+        element={<PageLayout children={<CreatePost />} hideFooter />}
+      />
+      <Route
+        path="/register"
+        element={<PageLayout children={<SignupScreen />} />}
+      />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

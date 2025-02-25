@@ -29,8 +29,6 @@ export const useCurrentUser = () => {
   const token = localStorage.getItem(LOCAL_STORAGE_KEYS.token);
   const expiresOn = localStorage.getItem(LOCAL_STORAGE_KEYS.expiresOn);
 
-  console.log(username, token, expiresOn);
-
   return (
     (username !== null &&
       token !== null &&
