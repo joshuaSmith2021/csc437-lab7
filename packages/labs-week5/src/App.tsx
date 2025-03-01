@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import "./App.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { Spinner } from "./Spinner";
-import { GroceryData, groceryFetcher } from "./groceryFetcher";
+import { useGroceryFetch } from "./useGroceryFetch";
 
 type ModalProps = {
   headerLabel?: React.ReactNode;
@@ -118,66 +118,12 @@ type GroceriesWidgetProps = {
 
 function GroceriesWidget({ addItemToList }: GroceriesWidgetProps) {
   const [datasource, setDatasource] = useState<string>("MDN");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<unknown>(undefined);
-  const [groceries, setGroceries] = useState<GroceryData | undefined>(
-    undefined,
-  );
 
-  // useEffect(() => {
-  //   if (datasourceUrl) {
-  //     setIsLoading(true);
-  //     setGroceries(undefined);
-  //     setError(undefined);
-  //     setTimeout(
-  //       () =>
-  //         datasourceUrl &&
-  //         fetch(datasourceUrl)
-  //           .then((response) => response.json())
-  //           .then((data) => {
-  //             setIsLoading(false);
-  //             setGroceries(data);
-  //           })
-  //           .catch((e) => {
-  //             setIsLoading(false);
-  //             setError(e);
-  //           }),
-  //       2000,
-  //     );
-  //   } else {
-  //     setGroceries(undefined);
-  //     setIsLoading(false);
-  //     setError(undefined);
-  //   }
-  // }, [datasourceUrl]);
-
-  useEffect(() => {
-    let isStale = false;
-    setIsLoading(true);
-    setError(undefined);
-    setGroceries(undefined);
-    groceryFetcher
-      .fetch(datasource)
-      .then((data) => {
-        if (!isStale) {
-          setGroceries(data);
-        }
-      })
-      .catch((e) => {
-        if (!isStale) {
-          setError(e);
-        }
-      })
-      .finally(() => {
-        if (!isStale) {
-          setIsLoading(false);
-        }
-      });
-
-    return () => {
-      isStale = true;
-    };
-  }, [datasource]);
+  const {
+    data: groceries,
+    loading: isLoading,
+    error,
+  } = useGroceryFetch(datasource);
 
   return (
     <>
@@ -248,6 +194,7 @@ function App() {
     }
 
     setNewTaskText("");
+    setIsModalVisible(false);
     addTaskByName(newTaskText);
   };
 
