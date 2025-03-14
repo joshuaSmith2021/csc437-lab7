@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 
 export interface PersistedUser {
   username: string;
@@ -15,18 +15,17 @@ export interface PersistedImage {
 export class ImageProvider {
   constructor(private readonly mongoClient: MongoClient) {}
 
-  async getAllImages(): Promise<PersistedImage[]> {
-    const collectionName = process.env.IMAGES_COLLECTION_NAME;
-    if (!collectionName) {
-      throw new Error(
-        "Missing IMAGES_COLLECTION_NAME from environment variables",
-      );
-    }
-
+  async getAllImages(authorId?: string): Promise<PersistedImage[]> {
     const images = (await this.mongoClient
       .db()
       .collection<PersistedImage>("images")
       .aggregate([
+        ...((authorId && [
+          {
+            $match: { author: authorId },
+          },
+        ]) ||
+          []),
         {
           $lookup: {
             from: "users",
@@ -48,5 +47,18 @@ export class ImageProvider {
       .toArray()) as PersistedImage[];
 
     return images;
+  }
+
+  async updateImageName(imageId: string, newName: string): Promise<number> {
+    const result = await this.mongoClient
+      .db()
+      .collection("images")
+      .updateOne(
+        /* This seems wrong, but it works. */
+        { _id: imageId as unknown as ObjectId },
+        { $set: { name: newName } },
+      );
+
+    return result.matchedCount;
   }
 }

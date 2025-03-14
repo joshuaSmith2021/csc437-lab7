@@ -2,6 +2,7 @@ import express, { Response } from "express";
 import dotenv from "dotenv";
 import { MongoClient } from "mongodb";
 import { ImageProvider, PersistedImage } from "./ImageProvider";
+import { registerImageRoutes } from "./routes/images";
 
 dotenv.config();
 const PORT = process.env.PORT || 3000;
@@ -11,30 +12,31 @@ const { MONGO_USER, MONGO_PWD, MONGO_CLUSTER, DB_NAME } = process.env;
 const connectionStringRedacted = `mongodb+srv://${MONGO_USER}:<password>@${MONGO_CLUSTER}/${DB_NAME}`;
 const connectionString = `mongodb+srv://${MONGO_USER}:${MONGO_PWD}@${MONGO_CLUSTER}/${DB_NAME}`;
 
-let mongoClient: MongoClient | undefined;
+export type MongoClientBox = { mongoClient: MongoClient | undefined };
+
+const mongoClientBox: MongoClientBox = { mongoClient: undefined };
 
 const bootstrapServer = async () => {
   console.log("Attempting Mongo connection at " + connectionStringRedacted);
 
-  mongoClient = await MongoClient.connect(connectionString);
-  const collectionInfos = await mongoClient.db().listCollections().toArray();
+  mongoClientBox.mongoClient = await MongoClient.connect(connectionString);
+  const collectionInfos = await mongoClientBox.mongoClient
+    .db()
+    .listCollections()
+    .toArray();
 
   // For debug only
   console.log(collectionInfos.map((collectionInfo) => collectionInfo.name));
 };
 
 const app = express();
+app.use(express.json());
 
 app.get("/hello", (req, res) => {
   res.send("Hello, World");
 });
 
-app.get("/api/images", async (_, res: Response<PersistedImage[]>) => {
-  const imageProvider = new ImageProvider(mongoClient!);
-  const images = await imageProvider.getAllImages();
-
-  res.send(images);
-});
+registerImageRoutes(app, mongoClientBox);
 
 app.use(express.static(STATIC_DIR));
 
