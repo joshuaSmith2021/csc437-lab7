@@ -1,10 +1,11 @@
-import express, { Response } from "express";
 import dotenv from "dotenv";
-import { MongoClient } from "mongodb";
-import { ImageProvider, PersistedImage } from "./ImageProvider";
-import { registerImageRoutes } from "./routes/images";
-
 dotenv.config();
+
+import express, { Response } from "express";
+import { MongoClient } from "mongodb";
+import { registerImageRoutes } from "./routes/images";
+import { registerAuthRoutes, verifyAuthToken } from "./routes/auth";
+
 const PORT = process.env.PORT || 3000;
 const STATIC_DIR = process.env.STATIC_DIR || "public";
 const { MONGO_USER, MONGO_PWD, MONGO_CLUSTER, DB_NAME } = process.env;
@@ -36,7 +37,9 @@ app.get("/hello", (req, res) => {
   res.send("Hello, World");
 });
 
+app.use("/api/*", verifyAuthToken);
 registerImageRoutes(app, mongoClientBox);
+registerAuthRoutes(app, mongoClientBox);
 
 app.use(express.static(STATIC_DIR));
 
