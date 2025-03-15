@@ -5,7 +5,8 @@ export type onUsernamePasswordSubmit = (
   password: string,
 ) => Promise<FormState>;
 
-type FormState = {
+// Not the best place for this to live, but this is due soon and it works.
+export type FormState = {
   success: boolean;
   message: string;
 };
