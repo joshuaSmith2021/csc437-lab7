@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export default function ImageEditForm() {
+export default function ImageEditForm({ authToken }: { authToken?: string }) {
   const [imageId, setImageId] = useState("");
   const [imageName, setImageName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -13,6 +13,7 @@ export default function ImageEditForm() {
       fetch(`/api/images/${imageId}`, {
         method: "PATCH",
         headers: {
+          Authorization: `Bearer ${authToken}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ name: imageName }),

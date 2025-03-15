@@ -9,16 +9,26 @@ import { MainLayout } from "./MainLayout";
 import { useImageFetching } from "./images/useImageFetching";
 import { RegisterPage } from "./auth/RegisterPage";
 import LoginPage from "./auth/LoginPage";
+import { ProtectedRoute } from "./ProtectedRoute";
 
 function App() {
   const [username, setUsername] = useState("John Doe");
-  const { isLoading, fetchedImages } = useImageFetching("");
+  const [authToken, setAuthToken] = useState<string | undefined>(undefined);
+  const { isLoading, fetchedImages } = useImageFetching("", authToken);
 
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<MainLayout />}>
-          <Route index element={<Homepage userName={username} />} />
+          <Route
+            index
+            element={
+              <ProtectedRoute authToken={authToken}>
+                <Homepage userName={username} authToken={authToken} />
+              </ProtectedRoute>
+            }
+          />
+
           <Route
             path="/images"
             element={
@@ -28,23 +38,41 @@ function App() {
               />
             }
           />
+
           <Route
             path="/images/:imageId"
             element={
-              <ImageDetails
-                isLoading={isLoading}
-                fetchedImages={fetchedImages}
-              />
+              <ProtectedRoute authToken={authToken}>
+                <ImageDetails
+                  isLoading={isLoading}
+                  fetchedImages={fetchedImages}
+                />
+              </ProtectedRoute>
             }
           />
+
           <Route
             path="/account"
             element={
-              <AccountSettings username={username} setUsername={setUsername} />
+              <ProtectedRoute authToken={authToken}>
+                <AccountSettings
+                  username={username}
+                  setUsername={setUsername}
+                />
+              </ProtectedRoute>
             }
           />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="login" element={<LoginPage />} />
+
+          <Route
+            path="/register"
+            element={<RegisterPage setAuthToken={setAuthToken} />}
+          />
+
+          <Route
+            path="login"
+            element={<LoginPage setAuthToken={setAuthToken} />}
+          />
+
           <Route path="*" element={<>404</>} />
         </Route>
       </Routes>

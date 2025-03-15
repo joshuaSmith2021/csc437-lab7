@@ -13,13 +13,17 @@ export type ImageEntryList = Readonly<ImageEntry[]>;
  * Fetches images on component mount.  Returns an object with two properties: isLoading and fetchedImages, which will be
  * an array of ImageData.
  */
-export function useImageFetching(imageId: string, delay = 1000) {
+export function useImageFetching(imageId: string, authToken?: string) {
   const [isLoading, setIsLoading] = useState(true);
   const [fetchedImages, setFetchedImages] = useState<ImageEntryList>([]);
 
   useEffect(() => {
     setIsLoading(true);
-    fetch("/api/images")
+    fetch("/api/images", {
+      headers: {
+        ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+      },
+    })
       .then((response) => response.json())
       .then(
         (data) =>
@@ -34,7 +38,7 @@ export function useImageFetching(imageId: string, delay = 1000) {
         setFetchedImages(data);
         setIsLoading(false);
       });
-  }, [imageId]);
+  }, [imageId, authToken]);
 
   return { isLoading, fetchedImages };
 }

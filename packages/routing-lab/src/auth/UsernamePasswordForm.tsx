@@ -1,4 +1,9 @@
-import React, { useActionState } from "react";
+import React, { useActionState, useEffect } from "react";
+
+export type onUsernamePasswordSubmit = (
+  username: string,
+  password: string,
+) => Promise<FormState>;
 
 type FormState = {
   success: boolean;
@@ -6,11 +11,13 @@ type FormState = {
 };
 
 type UsernamePasswordFormProps = {
-  onSubmit: (username: string, password: string) => Promise<void>;
+  onSubmit: onUsernamePasswordSubmit;
+  onSuccess?: () => void;
 };
 
 export default function UsernamePasswordForm({
   onSubmit,
+  onSuccess,
 }: UsernamePasswordFormProps) {
   const [result, submitAction, isPending] = useActionState(
     async (prev: FormState, formData: FormData) => {
@@ -21,15 +28,19 @@ export default function UsernamePasswordForm({
         return { success: false, message: "Missing username or password" };
       }
 
-      await onSubmit(username, password);
-
-      return { success: true, message: "" };
+      return await onSubmit(username, password);
     },
     {
       success: false,
       message: "",
     },
   );
+
+  useEffect(() => {
+    if (result.success && onSuccess) {
+      onSuccess();
+    }
+  }, [result]);
 
   return (
     <form action={submitAction}>
