@@ -6,6 +6,8 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import { useState } from "react";
 import { MainLayout } from "./MainLayout.jsx";
 import { useImageFetching } from "./images/useImageFetching.js";
+import { RegisterPage } from "./auth/RegisterPage.js";
+import LoginPage from "./auth/LoginPage.js";
 
 function App() {
   const [username, setUsername] = useState("John Doe");
@@ -40,6 +42,8 @@ function App() {
               <AccountSettings username={username} setUsername={setUsername} />
             }
           />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="login" element={<LoginPage />} />
           <Route path="*" element={<>404</>} />
         </Route>
       </Routes>
