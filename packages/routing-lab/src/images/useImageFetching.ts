@@ -24,6 +24,13 @@ export function useImageFetching(imageId: string, authToken?: string) {
         ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
       },
     })
+      .then((res) => {
+        if (res.status === 200) {
+          return res;
+        } else {
+          throw new Error("Status code bad");
+        }
+      })
       .then((response) => response.json())
       .then(
         (data) =>
@@ -31,13 +38,18 @@ export function useImageFetching(imageId: string, authToken?: string) {
             (image: ImageEntry) => ({ ...image, id: image._id }) as ImageEntry,
           ) as ImageEntryList,
       )
+      .then((data) => {
+        console.log(data);
+        return data;
+      })
       .then((data) =>
         imageId === "" ? data : data.filter((image) => image.id === imageId),
       )
       .then((data) => {
         setFetchedImages(data);
         setIsLoading(false);
-      });
+      })
+      .catch((e) => console.error(e, imageId));
   }, [imageId, authToken]);
 
   return { isLoading, fetchedImages };
