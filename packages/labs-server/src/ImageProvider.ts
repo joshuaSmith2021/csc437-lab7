@@ -1,4 +1,4 @@
-import { MongoClient, ObjectId } from "mongodb";
+import { MongoClient, ObjectId, OptionalId } from "mongodb";
 
 export interface PersistedUser {
   username: string;
@@ -19,32 +19,7 @@ export class ImageProvider {
     const images = (await this.mongoClient
       .db()
       .collection<PersistedImage>("images")
-      .aggregate([
-        ...((authorId && [
-          {
-            $match: { author: authorId },
-          },
-        ]) ||
-          []),
-        {
-          $lookup: {
-            from: "users",
-            localField: "author",
-            foreignField: "_id",
-            as: "author",
-          },
-        },
-        { $unwind: "$author" },
-        {
-          $project: {
-            src: 1,
-            name: 1,
-            likes: 1,
-            author: 1,
-          },
-        },
-      ])
-      .toArray()) as PersistedImage[];
+      .find().toArray()) as PersistedImage[];
 
     return images;
   }
@@ -60,5 +35,14 @@ export class ImageProvider {
       );
 
     return result.matchedCount;
+  }
+
+  async createImage(document: unknown) {
+    const result = await this.mongoClient
+      .db()
+      .collection("images")
+      .insertOne(document as OptionalId<Document>);
+
+    return result.insertedId;
   }
 }

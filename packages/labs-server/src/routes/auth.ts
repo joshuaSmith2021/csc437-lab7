@@ -30,22 +30,24 @@ function generateAuthToken(username: string): Promise<string> {
 export function verifyAuthToken(
   req: Request,
   res: Response,
-  next: NextFunction // Call next() to run the next middleware or request handler
+  next: NextFunction, // Call next() to run the next middleware or request handler
 ) {
   const authHeader = req.get("Authorization");
   // The header should say "Bearer <token string>".  Discard the Bearer part.
   const token = authHeader && authHeader.split(" ")[1];
 
   if (!token) {
-      res.status(401).end();
-  } else { // signatureKey already declared as a module-level variable
-      jwt.verify(token, signatureKey!, (error, decoded) => {
-          if (decoded) {
-              next();
-          } else {
-              res.status(403).end();
-          }
-      });
+    res.status(401).end();
+  } else {
+    // signatureKey already declared as a module-level variable
+    jwt.verify(token, signatureKey!, (error, decoded) => {
+      if (decoded) {
+        res.locals.token = decoded as jwt.JwtPayload;
+        next();
+      } else {
+        res.status(403).end();
+      }
+    });
   }
 }
 
@@ -76,9 +78,9 @@ export const registerAuthRoutes = (
       password,
     );
 
-    res.status(statusCode).send(statusCode === 201
-        ? generateAuthToken(username)
-        : response);
+    res
+      .status(statusCode)
+      .send(statusCode === 201 ? generateAuthToken(username) : response);
   });
 
   app.post("/auth/login", async (req: Request, res: Response) => {
@@ -103,7 +105,7 @@ export const registerAuthRoutes = (
     const authenticated = await authProvider.verifyPassword(username, password);
 
     if (authenticated) {
-      const token = await generateAuthToken(username)
+      const token = await generateAuthToken(username);
       res.status(200).send(token);
     } else {
       res.status(401).send({

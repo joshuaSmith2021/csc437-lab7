@@ -3,6 +3,10 @@ import { ImageProvider, PersistedImage } from "../ImageProvider";
 import { MongoClientBox } from "..";
 import z from "zod";
 import { MongoClient } from "mongodb";
+import {
+  handleImageFileErrors,
+  imageMiddlewareFactory,
+} from "../imageUploadMiddleware";
 
 const getImageProvider = (mongoClient: MongoClient) =>
   new ImageProvider(mongoClient);
@@ -67,4 +71,47 @@ export function registerImageRoutes(
       });
     }
   });
+
+  app.post(
+    "/api/images",
+    imageMiddlewareFactory.single("imageUpload"),
+    handleImageFileErrors,
+    async (req: Request, res: Response) => {
+      // Final handler function after the above two middleware functions finish running
+      const { name: imageTitle } = z
+        .object({ name: z.string().optional() })
+        .parse(req.body);
+
+      const file = req.file;
+
+      if (!file || !imageTitle) {
+        res.status(400).send({
+          error: "Bad request",
+          message: "Missing file or image title",
+        });
+        return;
+      }
+
+      file satisfies Express.Multer.File;
+      imageTitle satisfies string;
+
+      const filename = file.filename;
+
+      const document = {
+        _id: filename,
+        src: `/uploads/${filename}`,
+        author: res.locals.token.username as string,
+        likes: 0,
+        name: imageTitle,
+      };
+
+      const provider = getImageProvider(mongoClientBox.mongoClient!);
+      provider
+        .createImage(document)
+        .then(() => res.status(201).send())
+        .catch((e) =>
+          res.status(500).send({ error: "Internal server error", message: e }),
+        );
+    },
+  );
 }

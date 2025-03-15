@@ -8,6 +8,7 @@ import { registerAuthRoutes, verifyAuthToken } from "./routes/auth";
 
 const PORT = process.env.PORT || 3000;
 const STATIC_DIR = process.env.STATIC_DIR || "public";
+const IMAGE_UPLOAD_DIR = "uploads";
 const { MONGO_USER, MONGO_PWD, MONGO_CLUSTER, DB_NAME } = process.env;
 
 const connectionStringRedacted = `mongodb+srv://${MONGO_USER}:<password>@${MONGO_CLUSTER}/${DB_NAME}`;
@@ -42,6 +43,7 @@ registerImageRoutes(app, mongoClientBox);
 registerAuthRoutes(app, mongoClientBox);
 
 app.use(express.static(STATIC_DIR));
+app.use("/uploads", express.static(IMAGE_UPLOAD_DIR));
 
 app.get("*", (req, res) => {
   res.sendFile(`index.html`, { root: `${STATIC_DIR}` });
