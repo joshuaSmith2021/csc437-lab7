@@ -1,5 +1,6 @@
+import React from "react";
 import { Outlet } from "react-router";
-import { Header } from "./Header.jsx";
+import { Header } from "./Header";
 
 export function MainLayout() {
   return (

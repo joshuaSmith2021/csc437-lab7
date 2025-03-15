@@ -1,13 +1,22 @@
+import React from "react";
 import { useParams } from "react-router";
-import { useImageFetching } from "./useImageFetching.js";
+import { ImageEntryList } from "./useImageFetching";
 
-export function ImageDetails({ isLoading, fetchedImages }) {
-  const { imageId } = useParams();
+export function ImageDetails({
+  isLoading,
+  fetchedImages,
+}: {
+  isLoading: boolean;
+  fetchedImages: ImageEntryList;
+}) {
+  const params = useParams();
+  const imageId = parseInt(params.imageId!);
 
   if (isLoading) {
     return <>Loading...</>;
   }
-  const imageData = fetchedImages[imageId];
+
+  const imageData = fetchedImages[imageId!];
   if (!imageData) {
     return (
       <>

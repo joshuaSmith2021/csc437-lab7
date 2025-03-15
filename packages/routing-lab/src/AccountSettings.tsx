@@ -1,4 +1,12 @@
-export function AccountSettings({ username, setUsername }) {
+import React from "react";
+
+export function AccountSettings({
+  username,
+  setUsername,
+}: {
+  username: string;
+  setUsername: (newUsername: string) => void;
+}) {
   return (
     <>
       <h2>Account settings</h2>

@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 
-type ImageEntry = Readonly<{
+export type ImageEntry = Readonly<{
   id: string;
   src: string;
   name: string;
 }>;
 
-type ImageEntryList = Readonly<ImageEntry[]>;
+export type ImageEntryList = Readonly<ImageEntry[]>;
 
 const IMAGES = [
   {

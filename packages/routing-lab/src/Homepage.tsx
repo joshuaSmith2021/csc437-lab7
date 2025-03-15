@@ -1,4 +1,6 @@
-export function Homepage(props) {
+import React from "react";
+
+export function Homepage(props: { userName: string }) {
   return (
     <>
       <h2>Welcome, {props.userName}</h2>

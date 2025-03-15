@@ -1,8 +1,15 @@
-import { useImageFetching } from "./useImageFetching.js";
+import React from "react";
 import "./ImageGallery.css";
 import { Link } from "react-router";
+import { ImageEntryList } from "./useImageFetching";
 
-export function ImageGallery({ isLoading, fetchedImages }) {
+export function ImageGallery({
+  isLoading,
+  fetchedImages,
+}: {
+  isLoading: boolean;
+  fetchedImages: ImageEntryList;
+}) {
   const imageElements = fetchedImages.map((image) => (
     <div key={image.id} className="ImageGallery-photo-container">
       <Link to={`/images/${image.id}`}>

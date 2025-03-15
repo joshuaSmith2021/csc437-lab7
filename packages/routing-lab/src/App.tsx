@@ -1,14 +1,14 @@
 import React from "react";
-import { Homepage } from "./Homepage.jsx";
-import { AccountSettings } from "./AccountSettings.jsx";
-import { ImageGallery } from "./images/ImageGallery.jsx";
-import { ImageDetails } from "./images/ImageDetails.jsx";
+import { Homepage } from "./Homepage";
+import { AccountSettings } from "./AccountSettings";
+import { ImageGallery } from "./images/ImageGallery";
+import { ImageDetails } from "./images/ImageDetails";
 import { BrowserRouter, Route, Routes } from "react-router";
 import { useState } from "react";
-import { MainLayout } from "./MainLayout.jsx";
-import { useImageFetching } from "./images/useImageFetching.js";
-import { RegisterPage } from "./auth/RegisterPage.js";
-import LoginPage from "./auth/LoginPage.js";
+import { MainLayout } from "./MainLayout";
+import { useImageFetching } from "./images/useImageFetching";
+import { RegisterPage } from "./auth/RegisterPage";
+import LoginPage from "./auth/LoginPage";
 
 function App() {
   const [username, setUsername] = useState("John Doe");
