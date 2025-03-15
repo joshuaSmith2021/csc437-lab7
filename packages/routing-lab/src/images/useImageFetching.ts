@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
 
+type ImageEntry = Readonly<{
+  id: string;
+  src: string;
+  name: string;
+}>;
+
+type ImageEntryList = Readonly<ImageEntry[]>;
+
 const IMAGES = [
   {
     id: "0",
@@ -26,7 +34,7 @@ const IMAGES = [
     src: "https://upload.wikimedia.org/wikipedia/commons/8/84/Male_and_female_chicken_sitting_together.jpg",
     name: "Chickens",
   },
-];
+] as const;
 
 /**
  * Fetches images on component mount.  Returns an object with two properties: isLoading and fetchedImages, which will be
@@ -36,9 +44,9 @@ const IMAGES = [
  * @param delay {number} the number of milliseconds fetching will take
  * @returns {{isLoading: boolean, fetchedImages: ImageData[]}} fetch state and data
  */
-export function useImageFetching(imageId, delay = 1000) {
+export function useImageFetching(imageId: string, delay = 1000) {
   const [isLoading, setIsLoading] = useState(true);
-  const [fetchedImages, setFetchedImages] = useState([]);
+  const [fetchedImages, setFetchedImages] = useState<ImageEntryList>([]);
   useEffect(() => {
     setTimeout(() => {
       if (imageId === "") {

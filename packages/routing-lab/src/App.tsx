@@ -1,5 +1,6 @@
-import { Homepage } from "./Homepage";
-import { AccountSettings } from "./AccountSettings";
+import React from "react";
+import { Homepage } from "./Homepage.jsx";
+import { AccountSettings } from "./AccountSettings.jsx";
 import { ImageGallery } from "./images/ImageGallery.jsx";
 import { ImageDetails } from "./images/ImageDetails.jsx";
 import { BrowserRouter, Route, Routes } from "react-router";

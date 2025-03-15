@@ -1,0 +1,12 @@
+###
+POST http://localhost:5173/auth/login
+Content-Type: application/json
+
+{ "username": "newuser", "password": "password" }
+
+### Authorized GET images
+GET http://localhost:5173/api/images
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5ld3VzZXIiLCJpYXQiOjE3NDIwMDUzNjYsImV4cCI6MTc0MjA5MTc2Nn0.RHfJpIfRoSHCstP-jtBLWVINFPkSwD44Qh4m8Ysdvuk
+
+### Unauthorized GET images
+GET http://localhost:5173/api/images
