@@ -9,6 +9,18 @@ export default function ImageEditForm() {
     setIsLoading(true);
     // Add your fetch code here...
 
+    if (imageId) {
+      fetch(`/api/images/${imageId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name: imageName }),
+      })
+        .then((res) => console.log(res.status, res.statusText))
+        .catch((e) => console.error(e));
+    }
+
     setImageId("");
     setImageName("");
     setIsLoading(false);
@@ -32,7 +44,9 @@ export default function ImageEditForm() {
           onChange={(e) => setImageName(e.target.value)}
         />
       </label>
-      <button disabled={isLoading}>Send request</button>
+      <button disabled={isLoading} onClick={handleSubmit}>
+        Send request
+      </button>
     </div>
   );
 }

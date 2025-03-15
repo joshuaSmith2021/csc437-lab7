@@ -16,6 +16,7 @@ export type ImageEntryList = Readonly<ImageEntry[]>;
 export function useImageFetching(imageId: string, delay = 1000) {
   const [isLoading, setIsLoading] = useState(true);
   const [fetchedImages, setFetchedImages] = useState<ImageEntryList>([]);
+
   useEffect(() => {
     setIsLoading(true);
     fetch("/api/images")
