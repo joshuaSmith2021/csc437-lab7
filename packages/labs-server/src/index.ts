@@ -37,7 +37,7 @@ app.get("/hello", (req, res) => {
   res.send("Hello, World");
 });
 
-// app.use("/api/*", verifyAuthToken);
+app.use("/api/*", verifyAuthToken);
 registerImageRoutes(app, mongoClientBox);
 registerAuthRoutes(app, mongoClientBox);
 

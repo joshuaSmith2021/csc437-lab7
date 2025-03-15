@@ -76,7 +76,9 @@ export const registerAuthRoutes = (
       password,
     );
 
-    res.status(statusCode).send(response);
+    res.status(statusCode).send(statusCode === 201
+        ? generateAuthToken(username)
+        : response);
   });
 
   app.post("/auth/login", async (req: Request, res: Response) => {
