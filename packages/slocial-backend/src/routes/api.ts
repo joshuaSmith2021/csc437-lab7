@@ -14,6 +14,12 @@ export const registerApiRoutes: RouteRegistrar = async (
   const mongoClient = await mongoClientProvider();
   const dataProvider = new DataProvider(mongoClient);
 
+  app.get("/api/posts", async (req, res) => {
+    const posts = await dataProvider.getAllPosts();
+
+    res.status(200).send(posts).end();
+  });
+
   app.post(
     "/api/posts",
     imageMiddlewareFactory.single("imageUpload"),
@@ -45,7 +51,7 @@ export const registerApiRoutes: RouteRegistrar = async (
         timestampMillis: new Date().getTime(),
       } satisfies IDataDocument;
 
-      await dataProvider.uploadPost(document);
+      await dataProvider.createPost(document);
 
       res.status(201).send().end();
     },

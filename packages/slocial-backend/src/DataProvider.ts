@@ -21,7 +21,22 @@ export default class DataProvider {
       .collection<IDataDocument>(COLLECTION_NAME);
   }
 
-  async uploadPost(post: IDataDocument) {
+  async getAllPosts() {
+    const posts = await this.collection
+      .find()
+      .sort({ timestampMillis: -1 })
+      .toArray();
+
+    // Remove any and all mongodb metadata
+    return posts.map(({ author, timestampMillis, src, caption }) => ({
+      author,
+      timestampMillis,
+      src,
+      caption,
+    }));
+  }
+
+  async createPost(post: IDataDocument) {
     await this.collection.insertOne(post);
   }
 }
