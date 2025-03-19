@@ -10,7 +10,7 @@ export default function Navbar({
   setIsDarkMode: (mode: boolean) => void;
 }) {
   return (
-    <div className="p-4 sticky top-0 flex items-baseline gap-4 justify-between bg-slate-600 text-white">
+    <div className="p-4 sticky top-0 flex items-baseline gap-4 justify-between bg-slate-600 dark:bg-slate-900 text-white">
       <Link to="/">
         <h1 className="text-2xl cursor-pointer">SLOCIAL</h1>
       </Link>

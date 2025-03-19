@@ -51,7 +51,10 @@ export default function CreatePost({ authToken }: BaseComponentProps) {
 
   return (
     <div className="w-screen flex justify-center items-center min-h-[20rem]">
-      <form action={submitAction} className="flex flex-col gap-3">
+      <form
+        action={submitAction}
+        className="flex flex-col gap-3 dark:text-white"
+      >
         <label className="block">
           <p>Upload</p>
           <input
@@ -71,7 +74,10 @@ export default function CreatePost({ authToken }: BaseComponentProps) {
             disabled={isPending}
           />
         </label>
-        <button className="self-start" disabled={isPending}>
+        <button
+          className="self-start p-3 rounded-md text-white bg-slate-600 hover:bg-slate-700 focus:bg-slate-800"
+          disabled={isPending}
+        >
           Upload
         </button>
         {(error && <div className={ERROR_TEXT_CLASSNAME}>{error}</div>) || (

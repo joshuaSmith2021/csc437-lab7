@@ -19,7 +19,7 @@ export default function PageLayout({
   return (
     <>
       <div
-        className={`bg-slate-100 min-h-screen ${(isDarkMode && "dark") || ""}`}
+        className={`bg-slate-100 dark:bg-slate-950 min-h-screen ${(isDarkMode && "dark") || ""}`}
       >
         <Navbar
           authToken={authToken}

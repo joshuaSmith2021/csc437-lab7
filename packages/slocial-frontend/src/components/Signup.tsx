@@ -47,7 +47,7 @@ export default function SignupScreen({ setAuthToken }: BaseComponentProps) {
   };
 
   return (
-    <div className="flex flex-col gap-3 justify-center items-center">
+    <div className="flex flex-col gap-3 justify-center items-center dark:text-white">
       <h1 className="text-2xl">Create an account</h1>
       <form className="flex flex-col gap-3">
         <label className="block">
@@ -97,8 +97,8 @@ export default function SignupScreen({ setAuthToken }: BaseComponentProps) {
             "bg-slate-700",
             "hover:bg-slate-800",
             "active:bg-slate-900",
-            "disabled:bg-slate-400",
-            "disabled:cursor-progress",
+            "disabled:bg-slate-600",
+            "disabled:cursor-not-allowed",
             "text-white",
             "rounded-md",
             "p-1",

@@ -8,7 +8,7 @@ type PostCardProps = {
 function PostCard({ post }: PostCardProps) {
   const { author, caption, timestamp } = post;
   return (
-    <div className="bg-slate-300 rounded-xs">
+    <div className="bg-slate-300 dark:bg-slate-800 dark:text-white rounded-xs">
       <div className="flex justify-between items-center p-2">
         <p>{author}</p>
         <p>{parseTimestamp(timestamp)}</p>

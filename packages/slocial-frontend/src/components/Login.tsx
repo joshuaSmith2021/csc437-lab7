@@ -20,7 +20,7 @@ export default function LoginScreen({ setAuthToken }: BaseComponentProps) {
   };
 
   return (
-    <div className="flex flex-col gap-3 justify-center items-center">
+    <div className="flex flex-col gap-3 justify-center items-center dark:text-white">
       <h1 className="text-2xl">Log in to your account</h1>
       <form className="flex flex-col gap-3">
         <label className="block">
