@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { attemptLogin } from "../fetch/auth";
 import { ERROR_TEXT_CLASSNAME } from "../util/classnames";
 import { useNavigate } from "react-router-dom";
+import { login } from "../fetch/auth";
+import { AuthTokenComponentProps } from "../routes";
 
-export default function LoginScreen() {
+export default function LoginScreen({ setAuthToken }: AuthTokenComponentProps) {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -13,9 +14,8 @@ export default function LoginScreen() {
   const handleLogin = () => {
     setIsSubmissionDisabled(true);
     setError("");
-    attemptLogin(username, password)
-      .then(() => navigate("/"))
-      .catch((e) => setError(String(e)))
+    login(username, password, setAuthToken, setError)
+      .then((token) => token && navigate("/"))
       .finally(() => setIsSubmissionDisabled(false));
   };
 

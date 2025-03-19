@@ -1,10 +1,9 @@
 import { Link } from "react-router-dom";
-import { useCurrentUser } from "../fetch/auth";
+import { AuthTokenComponentProps } from "../routes";
 
-export default function Footer() {
-  const currentUser = useCurrentUser();
+export default function Footer({ authToken }: AuthTokenComponentProps) {
   return (
-    currentUser && (
+    authToken && (
       <>
         <div className="fixed bottom-0 w-screen z-2">
           <div className="flex justify-center">

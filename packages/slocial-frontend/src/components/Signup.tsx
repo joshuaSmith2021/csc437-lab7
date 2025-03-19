@@ -1,24 +1,51 @@
 import { useEffect, useState } from "react";
 import { ERROR_TEXT_CLASSNAME, TEXT_INPUT_CLASSNAME } from "../util/classnames";
 import { isValidCalpolyEmail } from "../util/input-validation";
+import { register } from "../fetch/auth";
+import { AuthTokenComponentProps } from "../routes";
+import { useNavigate } from "react-router-dom";
 
-export default function SignupScreen() {
+export default function SignupScreen({
+  setAuthToken,
+}: AuthTokenComponentProps) {
+  const navigate = useNavigate();
+
+  const [email, setEmail] = useState("");
+  const [isEmailValid, setIsEmailValid] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
-  const [isSubmissionDisabled, _setIsSubmissionDisabled] = useState(false);
+  const [error, _setError] = useState("");
+  const [isSubmissionDisabled, _setIsSubmissionDisabled] = useState(true);
+
+  const setError = (error: string) => {
+    _setIsSubmissionDisabled(error !== "");
+    _setError(error);
+  };
 
   useEffect(() => {
+    if (!isEmailValid || !isValidCalpolyEmail(email)) {
+      setError("Invalid calpoly.edu email");
+      return;
+    }
+
+    if (!username || !password) {
+      setError("Please provide a username and password");
+      return;
+    }
+
     if (password !== confirmPassword) {
       setError("Passwords do not match");
-    } else {
-      setError("");
+      return;
     }
-  }, [password, confirmPassword]);
+
+    setError("");
+  }, [email, username, password, confirmPassword]);
 
   const handleRegistration = () => {
-    alert("Not yet implemented!");
+    register(username, password, setAuthToken, setError).then(
+      (token) => token && navigate("/"),
+    );
   };
 
   return (
@@ -32,15 +59,8 @@ export default function SignupScreen() {
             className={`${TEXT_INPUT_CLASSNAME} invald:border-red-500`}
             onChange={(e) => {
               const target = e.target;
-              if (
-                !target.validity.valid ||
-                !isValidCalpolyEmail(e.target.value)
-              ) {
-                setError("Invalid email");
-                return;
-              }
-
-              setError("");
+              setIsEmailValid(target.validity.valid);
+              setEmail(e.target.value);
             }}
           />
         </label>
