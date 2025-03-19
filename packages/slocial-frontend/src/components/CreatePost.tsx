@@ -68,6 +68,7 @@ export default function CreatePost({ authToken }: BaseComponentProps) {
           <p>Caption</p>
           <input
             type="text"
+            className="border rounded-md p-1"
             name="caption"
             maxLength={300}
             placeholder="Write something..."
