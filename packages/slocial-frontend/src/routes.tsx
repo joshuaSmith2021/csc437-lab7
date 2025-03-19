@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import CreatePost from "./components/CreatePost";
 import PageLayout from "./components/Layout";
 import SignupScreen from "./components/Signup";
+import ProtectedRoute from "./ProtectedRoute";
 
 export type AuthTokenComponentProps = {
   authToken: string | undefined;
@@ -22,7 +23,7 @@ function Logout({
   useEffect(() => {
     setToken(undefined);
     navigate("/");
-  }, []);
+  }, [setToken, navigate]);
 
   return <></>;
 }
@@ -48,11 +49,15 @@ export default function AppRoutes() {
       <Route
         path="/"
         element={
-          <PageLayout
-            authToken={authToken}
-            setAuthToken={setAuthToken}
-            children={<App />}
-          />
+          <ProtectedRoute authToken={authToken}>
+            <PageLayout
+              authToken={authToken}
+              setAuthToken={setAuthToken}
+              children={
+                <App authToken={authToken} setAuthToken={setAuthToken} />
+              }
+            />
+          </ProtectedRoute>
         }
       />
       <Route
@@ -80,12 +85,16 @@ export default function AppRoutes() {
       <Route
         path="/create"
         element={
-          <PageLayout
-            authToken={authToken}
-            setAuthToken={setAuthToken}
-            children={<CreatePost />}
-            hideFooter
-          />
+          <ProtectedRoute authToken={authToken}>
+            <PageLayout
+              authToken={authToken}
+              setAuthToken={setAuthToken}
+              children={
+                <CreatePost authToken={authToken} setAuthToken={setAuthToken} />
+              }
+              hideFooter
+            />
+          </ProtectedRoute>
         }
       />
       <Route

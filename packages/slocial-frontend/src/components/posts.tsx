@@ -13,7 +13,7 @@ function PostCard({ post }: PostCardProps) {
         <p>{author}</p>
         <p>{parseTimestamp(timestamp)}</p>
       </div>
-      <img src="/orangecat.png" />
+      <img src={post.imageHref?.toString() || "/orangecat.png"} />
 
       <p className="p-2">{caption}</p>
     </div>

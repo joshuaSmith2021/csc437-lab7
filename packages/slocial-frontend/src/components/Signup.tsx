@@ -40,7 +40,7 @@ export default function SignupScreen({
     }
 
     setError("");
-  }, [email, username, password, confirmPassword]);
+  }, [email, username, password, confirmPassword, isEmailValid]);
 
   const handleRegistration = () => {
     register(username, password, setAuthToken, setError).then(

@@ -1,43 +1,77 @@
-import { useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { ERROR_TEXT_CLASSNAME } from "../util/classnames";
+import { AuthTokenComponentProps } from "../routes";
+import { useNavigate } from "react-router-dom";
 
-export default function CreatePost() {
-  const [caption, setCaption] = useState("");
-  const [files, setFiles] = useState<FileList | null>();
+type FormState = {
+  success: boolean;
+  message: string;
+};
+
+export default function CreatePost({ authToken }: AuthTokenComponentProps) {
+  const navigate = useNavigate();
   const [error, setError] = useState<string>();
 
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    setError(undefined);
+  const [formState, submitAction, isPending] = useActionState(
+    async (_: FormState, formData: FormData) => {
+      try {
+        const caption = formData.get("caption")! as string;
+        const captionQuery = (caption && `?caption=${caption}`) || "";
+        const response = await fetch("/api/posts" + captionQuery, {
+          method: "POST",
+          body: formData,
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
 
-    if (caption === "" && !files?.length) {
-      setError("Please write a caption or upload a picture");
-      return;
+        if (!response.ok) {
+          const { message: errorMessage } = (await response.json()) as {
+            message: string;
+          };
+          return { success: false, message: errorMessage };
+        }
+
+        return { success: true, message: "" };
+      } catch (e) {
+        // Network error
+        console.error(e);
+        return { success: false, message: "Network error" };
+      }
+    },
+    { success: false, message: "" },
+  );
+
+  useEffect(() => setError(formState.message), [formState.message]);
+  useEffect(() => {
+    if (formState.success) {
+      navigate("/");
     }
-  };
+  });
 
   return (
     <div className="w-screen flex justify-center items-center min-h-[20rem]">
-      <form className="flex flex-col gap-3">
+      <form action={submitAction} className="flex flex-col gap-3">
         <label className="block">
           <p>Upload</p>
           <input
             type="file"
+            name="imageUpload"
             accept="image/png image/jpeg"
-            onChange={(e) => setFiles(e.currentTarget.files)}
+            disabled={isPending}
           />
         </label>
         <label className="block">
           <p>Caption</p>
           <input
             type="text"
+            name="caption"
             maxLength={300}
             placeholder="Write something..."
-            value={caption}
-            onChange={(e) => setCaption(e.currentTarget.value)}
+            disabled={isPending}
           />
         </label>
-        <button className="self-start" onClick={handleSubmit}>
+        <button className="self-start" disabled={isPending}>
           Upload
         </button>
         {(error && <div className={ERROR_TEXT_CLASSNAME}>{error}</div>) || (

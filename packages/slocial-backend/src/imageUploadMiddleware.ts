@@ -24,11 +24,12 @@ const storageEngine = multer.diskStorage({
         cb(null, pngName);
         break;
       case "image/jpg":
+      case "image/jpeg":
         const jpgName = `${randomUUID()}.jpg`;
         cb(null, jpgName);
         break;
       default:
-        cb(new ImageFormatError("Unsupported image type"), "");
+        cb(new ImageFormatError("Unsupported image type " + file.mimetype), "");
         break;
     }
   },
