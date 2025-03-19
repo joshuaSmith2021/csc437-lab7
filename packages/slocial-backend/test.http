@@ -1,10 +1,10 @@
-### returns eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5ld3VzZXIiLCJpYXQiOjE3NDIyMzMyOTgsImV4cCI6MTc0MjMxOTY5OH0.f9qftMSc1lC81cPlv15U_QgxNAF0XTO8ed0Q-vy9UDo
+### Returns a token for a newly created user
 POST http://localhost:3000/auth/register
 Content-Type: application/json
 
 { "username": "newuser", "password": "password" }
 
-### returns a token
+### returns a token for an existing user
 POST http://localhost:3000/auth/login
 Content-Type: application/json
 
@@ -24,7 +24,14 @@ POST http://localhost:3000/auth/login
 
 ### Returns an empty list
 GET http://localhost:3000/api/motd
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5ld3VzZXIiLCJpYXQiOjE3NDIyMzMyOTgsImV4cCI6MTc0MjMxOTY5OH0.f9qftMSc1lC81cPlv15U_QgxNAF0XTO8ed0Q-vy9UDo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5ld3VzZXIiLCJpYXQiOjE3NDIzNTQ2MzgsImV4cCI6MTc0MjQ0MTAzOH0.M1VHkB-4DyqlNx1NCDeAD0_NpVcidyZRMfIkxZqkIQg
+
+### Creates a post
+POST http://localhost:3000/api/posts?caption=it looks like posts are working!
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5ld3VzZXIiLCJpYXQiOjE3NDIzNTQ2MzgsImV4cCI6MTc0MjQ0MTAzOH0.M1VHkB-4DyqlNx1NCDeAD0_NpVcidyZRMfIkxZqkIQg
+
+### Returns a 401
+POST http://localhost:3000/api/posts?caption=401
 
 ### Returns a 401
 GET http://localhost:3000/api/motd
