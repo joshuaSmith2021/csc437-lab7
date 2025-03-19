@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import PostGrid from "./components/posts";
-import { Post, useGetAllPosts } from "./data/posts";
-import { AuthTokenComponentProps } from "./routes";
+import { Post, getAllPosts } from "./data/posts";
+import { BaseComponentProps } from "./routes";
 
-function App({ authToken }: AuthTokenComponentProps) {
+function App({ authToken }: BaseComponentProps) {
   const [posts, setPosts] = useState<Post[]>([]);
 
   useEffect(() => {
-    useGetAllPosts(authToken).then((posts) => setPosts(posts));
-  }, []);
+    getAllPosts(authToken).then((posts) => setPosts(posts));
+  }, [authToken]);
 
   return <PostGrid posts={posts} />;
 }

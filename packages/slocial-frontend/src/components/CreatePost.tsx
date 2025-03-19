@@ -1,6 +1,6 @@
 import { useActionState, useEffect, useState } from "react";
 import { ERROR_TEXT_CLASSNAME } from "../util/classnames";
-import { AuthTokenComponentProps } from "../routes";
+import { BaseComponentProps } from "../routes";
 import { useNavigate } from "react-router-dom";
 
 type FormState = {
@@ -8,7 +8,7 @@ type FormState = {
   message: string;
 };
 
-export default function CreatePost({ authToken }: AuthTokenComponentProps) {
+export default function CreatePost({ authToken }: BaseComponentProps) {
   const navigate = useNavigate();
   const [error, setError] = useState<string>();
 

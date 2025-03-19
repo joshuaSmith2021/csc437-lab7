@@ -2,9 +2,9 @@ import { useState } from "react";
 import { ERROR_TEXT_CLASSNAME } from "../util/classnames";
 import { useNavigate } from "react-router-dom";
 import { login } from "../fetch/auth";
-import { AuthTokenComponentProps } from "../routes";
+import { BaseComponentProps } from "../routes";
 
-export default function LoginScreen({ setAuthToken }: AuthTokenComponentProps) {
+export default function LoginScreen({ setAuthToken }: BaseComponentProps) {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");

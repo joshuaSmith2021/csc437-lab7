@@ -1,7 +1,7 @@
 import { JSX } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import { AuthTokenComponentProps } from "../routes";
+import { BaseComponentProps } from "../routes";
 
 type PageLayoutProps = {
   children: JSX.Element | string;
@@ -13,14 +13,28 @@ export default function PageLayout({
   hideFooter,
   authToken,
   setAuthToken,
-}: PageLayoutProps & AuthTokenComponentProps) {
+  isDarkMode,
+  setIsDarkMode,
+}: PageLayoutProps & BaseComponentProps) {
   return (
     <>
-      <div className="bg-slate-100 min-h-screen">
-        <Navbar authToken={authToken} setAuthToken={setAuthToken} />
+      <div
+        className={`bg-slate-100 min-h-screen ${(isDarkMode && "dark") || ""}`}
+      >
+        <Navbar
+          authToken={authToken}
+          setAuthToken={setAuthToken}
+          isDarkMode={isDarkMode}
+          setIsDarkMode={setIsDarkMode}
+        />
         {children}
         {!hideFooter && (
-          <Footer authToken={authToken} setAuthToken={setAuthToken} />
+          <Footer
+            authToken={authToken}
+            setAuthToken={setAuthToken}
+            isDarkMode={isDarkMode}
+            setIsDarkMode={setIsDarkMode}
+          />
         )}
       </div>
     </>

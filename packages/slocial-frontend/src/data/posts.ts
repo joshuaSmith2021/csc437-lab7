@@ -12,7 +12,7 @@ type GetAllItemsResponseItem = {
   caption?: string;
 };
 
-export const useGetAllPosts: (authToken?: string) => Promise<Post[]> = async (
+export const getAllPosts: (authToken?: string) => Promise<Post[]> = async (
   authToken,
 ) =>
   await fetch("/api/posts", {

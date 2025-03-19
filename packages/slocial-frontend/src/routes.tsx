@@ -8,9 +8,11 @@ import PageLayout from "./components/Layout";
 import SignupScreen from "./components/Signup";
 import ProtectedRoute from "./ProtectedRoute";
 
-export type AuthTokenComponentProps = {
+export type BaseComponentProps = {
   authToken: string | undefined;
   setAuthToken: (authToken: string | undefined) => void;
+  isDarkMode: boolean;
+  setIsDarkMode: (mode: boolean) => void;
 };
 
 function Logout({
@@ -28,10 +30,10 @@ function Logout({
   return <></>;
 }
 
-function NotFound({ authToken, setAuthToken }: AuthTokenComponentProps) {
+function NotFound(props: BaseComponentProps) {
   return (
     <div className="flex flex-col justify-between h-screen items-stretch">
-      <Navbar authToken={authToken} setAuthToken={setAuthToken} />
+      <Navbar {...props} />
       <div className="flex flex-col items-center gap-4">
         <img className="saturate-50" src="/lostcat.png" />
         <h2 className="text-center text-4xl">Not Found</h2>
@@ -43,6 +45,9 @@ function NotFound({ authToken, setAuthToken }: AuthTokenComponentProps) {
 
 export default function AppRoutes() {
   const [authToken, setAuthToken] = useState<string | undefined>(undefined);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  const props = { authToken, setAuthToken, isDarkMode, setIsDarkMode };
 
   return (
     <Routes>
@@ -50,34 +55,21 @@ export default function AppRoutes() {
         path="/"
         element={
           <ProtectedRoute authToken={authToken}>
-            <PageLayout
-              authToken={authToken}
-              setAuthToken={setAuthToken}
-              children={
-                <App authToken={authToken} setAuthToken={setAuthToken} />
-              }
-            />
+            <PageLayout {...props} children={<App {...props} />} />
           </ProtectedRoute>
         }
       />
       <Route
         path="/login"
         element={
-          <PageLayout
-            authToken={authToken}
-            setAuthToken={setAuthToken}
-            children={
-              <LoginScreen authToken={authToken} setAuthToken={setAuthToken} />
-            }
-          />
+          <PageLayout {...props} children={<LoginScreen {...props} />} />
         }
       />
       <Route
         path="/logout"
         element={
           <PageLayout
-            authToken={authToken}
-            setAuthToken={setAuthToken}
+            {...props}
             children={<Logout setToken={setAuthToken} />}
           />
         }
@@ -87,11 +79,8 @@ export default function AppRoutes() {
         element={
           <ProtectedRoute authToken={authToken}>
             <PageLayout
-              authToken={authToken}
-              setAuthToken={setAuthToken}
-              children={
-                <CreatePost authToken={authToken} setAuthToken={setAuthToken} />
-              }
+              {...props}
+              children={<CreatePost {...props} />}
               hideFooter
             />
           </ProtectedRoute>
@@ -100,19 +89,10 @@ export default function AppRoutes() {
       <Route
         path="/register"
         element={
-          <PageLayout
-            authToken={authToken}
-            setAuthToken={setAuthToken}
-            children={
-              <SignupScreen authToken={authToken} setAuthToken={setAuthToken} />
-            }
-          />
+          <PageLayout {...props} children={<SignupScreen {...props} />} />
         }
       />
-      <Route
-        path="*"
-        element={<NotFound authToken={authToken} setAuthToken={setAuthToken} />}
-      />
+      <Route path="*" element={<NotFound {...props} />} />
     </Routes>
   );
 }

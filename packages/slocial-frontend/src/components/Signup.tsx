@@ -2,12 +2,10 @@ import { useEffect, useState } from "react";
 import { ERROR_TEXT_CLASSNAME, TEXT_INPUT_CLASSNAME } from "../util/classnames";
 import { isValidCalpolyEmail } from "../util/input-validation";
 import { register } from "../fetch/auth";
-import { AuthTokenComponentProps } from "../routes";
+import { BaseComponentProps } from "../routes";
 import { useNavigate } from "react-router-dom";
 
-export default function SignupScreen({
-  setAuthToken,
-}: AuthTokenComponentProps) {
+export default function SignupScreen({ setAuthToken }: BaseComponentProps) {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import { AuthTokenComponentProps } from "../routes";
+import { BaseComponentProps } from "../routes";
 
-export default function Footer({ authToken }: AuthTokenComponentProps) {
+export default function Footer({ authToken }: BaseComponentProps) {
   return (
     authToken && (
       <>
